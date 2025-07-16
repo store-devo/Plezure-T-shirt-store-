@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pre-Order T-Shirt Plezure Drop #1</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #111;
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #111;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #333;
+    }
+    .note {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      margin-top: 10px;
+    }
+    .success-message {
+      text-align: center;
+      color: green;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .error-message {
+      text-align: center;
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Pre-Order Tshirt<br>Plezure Drop #1</h2>
+
+    <form id="orderForm">
+      <label for="name">Nama Lengkap</label>
+      <input type="text" id="name" name="data[name]" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="data[email]" required>
+
+      <label for="phone">Nomer Whatsapp</label>
+      <input type="tel" id="phone" name="data[phone]" required>
+
+      <label for="size">Size T-Shirt</label>
+      <select id="size" name="data[size]" required>
+        <option value="">-- Pilih Size --</option>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
+
+      <label for="qty">Jumlah</label>
+      <input type="number" id="qty" name="data[qty]" min="1" required>
+
+      <label for="address">Alamat Pengiriman</label>
+      <textarea id="address" name="data[address]" rows="4" required></textarea>
+
+      <button type="submit">Kirim Pre-Order</button>
+    </form>
+
+    <p class="success-message" id="successMessage" style="display: none;">Pre-Order berhasil dikirim!</p>
+    <p class="error-message" id="errorMessage" style="display: none;">Terjadi kesalahan. Coba lagi nanti.</p>
+
+    <p class="note">Powered by Plezure Studio</p>
+  </div>
+
+  <script>
+    const form = document.getElementById('orderForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const button = form.querySelector("button");
+      button.disabled = true;
+      button.innerText = "Mengirim...";
+
+      fetch('https://sheetdb.io/api/v1/8w0066ieg092q', {
+        method: 'POST',
+        body: new FormData(form),
+      })
+      .then(response => {
+        if (response.ok) {
+          successMessage.style.display = 'block';
+          errorMessage.style.display = 'none';
+          form.reset();
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .catch(error => {
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'block';
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        button.disabled = false;
+        button.innerText = "Kirim Pre-Order";
+      });
+    });
+  </script>
+</body>
+</html>
